@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { prisma } from "../../../prisma/client";
+import { prisma } from "../../client";
 
 export class ReviewService {
   async addReview(request: Request, response: Response) {

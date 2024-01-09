@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { prisma } from "../../../prisma/client";
+import { prisma } from "../../client";
 import { Prisma } from "@prisma/client";
 
 export class MovieService {
