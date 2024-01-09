@@ -5,7 +5,7 @@ import { prisma } from "../../../prisma/client";
 export class ReviewService {
   async addReview(request: Request, response: Response) {
     try {
-      const { movieId } = request.body;
+      const { movieId, rating, reviewComments, reviewerName } = request.body;
 
       const movie = await prisma.movie.findUnique({
         where: {
@@ -13,6 +13,7 @@ export class ReviewService {
         },
         select: {
           id: true,
+          averageRating: true,
         },
       });
 
@@ -22,7 +23,31 @@ export class ReviewService {
           .send({ status: false, message: "movie not found" });
       }
 
-      const review = await prisma.review.create({ data: request.body });
+      const reviewCount = await prisma.review.count({
+        where: {
+          movieId: parseInt(movieId, 10),
+        },
+      });
+
+      const review = await prisma.review.create({
+        data: {
+          rating: Number(rating),
+          reviewComments,
+          reviewerName,
+          movieId: parseInt(movieId, 10),
+        },
+      });
+
+      await prisma.movie.update({
+        where: {
+          id: Number(movieId),
+        },
+        data: {
+          averageRating:
+            ((movie?.averageRating ?? 0) * reviewCount + Number(rating)) /
+            (reviewCount + 1),
+        },
+      });
 
       return response
         .status(StatusCodes.ACCEPTED)

@@ -1,9 +1,9 @@
 import Joi from "@hapi/joi";
 
 const addReviewContract = Joi.object({
-  movieId: Joi.number().required(),
+  movieId: Joi.string().required(),
   reviewerName: Joi.string().required(),
-  rating: Joi.number().required(),
+  rating: Joi.string().required(),
   reviewComments: Joi.string().required(),
 });
 

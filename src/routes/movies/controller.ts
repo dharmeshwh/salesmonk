@@ -8,6 +8,8 @@ const movieService = new MovieService();
 
 movieRouter.get("/", movieService.getAllMovie);
 
+movieRouter.get("/search", movieService.searchMovie);
+
 movieRouter.put(
   "/:id",
   validate(updateMovieContract),

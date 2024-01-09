@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { prisma } from "../../../prisma/client";
+import { Prisma } from "@prisma/client";
 
 export class MovieService {
   async addMovie(request: Request, response: Response) {
@@ -100,6 +101,27 @@ export class MovieService {
 
       const movies = await prisma.movie.findMany({ take: Number(take), skip });
 
+      return response
+        .status(StatusCodes.ACCEPTED)
+        .send({ status: true, data: movies });
+    } catch (error: any) {
+      return response
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send({ status: true, message: error.message });
+    }
+  }
+
+  async searchMovie(request: Request, response: Response) {
+    const { search } = request.query;
+    try {
+      const movies = await prisma.movie.findMany({
+        where: {
+          name: {
+            contains: (search as string).toLowerCase(),
+            mode: Prisma.QueryMode.insensitive,
+          },
+        },
+      });
       return response
         .status(StatusCodes.ACCEPTED)
         .send({ status: true, data: movies });
