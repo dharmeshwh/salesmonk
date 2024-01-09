@@ -16,7 +16,7 @@ app.post("/movies", async (req: Request, res: Response) => {
     const movie = await prisma.movie.create({
       data: {
         name,
-        releaseDate,
+        releaseDate: new Date(releaseDate).toISOString(),
       },
     });
 
